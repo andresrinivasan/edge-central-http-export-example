@@ -1,0 +1,38 @@
+{
+    "jokeType": "dad",
+
+    "apiVersion": "v2",
+    "id": "040bd523-ec33-440d-9d72-e5813a465f37",
+    "origin": 1602168089665565200,
+    "deviceName": "device-001",
+    "profileName": "profile-001",
+    "sourceName": "source-1",
+    "readings":
+    [
+        {
+            "deviceName": "device-001",
+            "id": "31569347-9369-43ec-aa6a-59ea9c624a6f",
+            "modified": 1594975851631,
+            "origin": 1602168089665565200,
+            "profileName": "profile-001",
+            "resourceName": "resource-001",
+            "value": "39.5",
+            "valueType": "Float32"
+        },
+        {
+            "create": 1594876281221,
+            "deviceName": "device-001",
+            "id": "2fd73a5b-969f-483c-9c52-6bb460a06eb1",
+            "origin": 1602168089665565200,
+            "profileName": "profile-001",
+            "resourceName": "resource-001",
+            "value": "75",
+            "valueType": "Int8"
+        }
+    ],
+    "tags":
+    {
+        "latitude":"25.024063",
+        "longitude":"121.522111"
+    }
+}

@@ -1,0 +1,148 @@
+[Writable]
+LogLevel = "DEBUG"
+
+[Writable.StoreAndForward]
+Enabled = false
+RetryInterval = "5m"
+MaxRetryCount = 10
+
+[Writable.Pipeline]
+UseTargetTypeOfByteArray = false
+ExecutionOrder = "PrintDataToLog, SetContextVariable_1, XpertHTTPExport_GET, JavascriptTransform, XpertHTTPExport_PATCH"
+
+[Writable.Pipeline.Functions.PrintDataToLog]
+
+# SetContextVariable sets the context variable per specified parameters.  The name of context variable will be the
+# value of parameter VariableName, and the value of context variable will be the value extracted from the specified
+# JsonPath of data as passed into the function.  Set ContinueOnError to true if users would like the pipeline to
+# continue even when there is error during SetContextVariable.  When ContinueOnError is true and error occurs during
+# SetContextVariable, the function will return incoming data rather than error. Please note that if incoming data
+# doesn't contain specified JsonPath, the context variable will be set to empty string "".
+#
+# The variable-name can be used in HTTP URL and MQTT topic parameters as {variable-name}
+[Writable.Pipeline.Functions.SetContextVariable_1]
+[Writable.Pipeline.Functions.SetContextVariable_1.Parameters]
+VariableName = "JokeType"
+ValueJSONPath = "jokeType"
+ContinueOnError = "false"
+
+[Writable.Pipeline.Functions.XpertHTTPExport_GET]
+[Writable.Pipeline.Functions.XpertHTTPExport_GET.Parameters]
+Method = "GET"
+MimeType = "application/json"
+Url = "http://dadjokes.online/"
+PersistOnError = "false"
+ContinueOnSendError = "false"
+ReturnInputData = "false"
+AuthMode = "none"
+
+# JavascriptTransform run specified scripts against incoming data.
+# It will return an error and stop the pipeline if any error occurs when running specified script or
+# if no data is received.  Please note that the script provided can access to the data as passed into the function
+# through an embeded variable "inputObject".  For any data passed to next function, the script must return the data
+# in a javascript object.
+[Writable.Pipeline.Functions.JavascriptTransform]
+[Writable.Pipeline.Functions.JavascriptTransform.Parameters]
+TransformScript = """
+  return { 
+    opener: "foo",
+    punchline: "bar",
+    }
+"""
+
+[Writable.Pipeline.Functions.XpertHTTPExport]
+[Writable.Pipeline.Functions.XpertHTTPExport_PATCH.Parameters]
+Method = "PATCH"
+MimeType = "application/json"
+Url = "https://postman-echo.com/patch?joketype={JokeType}"
+PersistOnError = "false"
+ContinueOnSendError = "false"
+ReturnInputData = "false"
+AuthMode = "none"
+
+# InsecureSecrets are required for Store and Forward DB access and for authenticated HTTP exports when not using
+# security services, i.e. Vault
+[Writable.InsecureSecrets]
+[Writable.InsecureSecrets.DB]
+path = "redisdb"
+[Writable.InsecureSecrets.DB.Secrets]
+username = ""
+password = ""
+[Writable.InsecureSecrets.http]
+path = "http"
+[Writable.InsecureSecrets.http.Secrets]
+client_id = "{CLIENT_ID}"
+client_secret = "{CLIENT_SECRET}"
+token_scopes = "{TOKEN_SCOPES}"
+token_url = "{TOKEN_URL}"
+#cacert is required when the target HTTP server uses self-signed certificate and SkipVerify is false
+#cacert = "{CA_CERTIFICATE}"
+#token_cert is required when the target OAuth2 token server uses self-signed certificate and SkipVerify is false
+#token_cert = "{TOKEN_SERVER_CERTIFICATE}"
+[Writable.InsecureSecrets.AES]
+path = "aes"
+[Writable.InsecureSecrets.AES.Secrets]
+key = "217A24432646294A404E635266556A586E3272357538782F413F442A472D4B6150645367566B59703373367639792442264529482B4D6251655468576D5A7134"
+
+[Writable.Telemetry]
+Interval = "0s" # Disables reporting
+
+[Service]
+HealthCheckInterval = "10s"
+Host = "localhost"
+Port = 59704
+ServerBindAddr = ""                        # if blank, uses default Go behavior https://golang.org/pkg/net/#Listen
+StartupMsg = "app-http-export has Started"
+MaxResultCount = 0                         # Not curently used by App Services.
+MaxRequestSize = 0                         # Not curently used by App Services.
+RequestTimeout = "5s"
+[Service.CORSConfiguration]
+EnableCORS = false
+CORSAllowCredentials = false
+CORSAllowedOrigin = "https://localhost"
+CORSAllowedMethods = "GET, POST, PUT, PATCH, DELETE"
+CORSAllowedHeaders = "Authorization, Accept, Accept-Language, Content-Language, Content-Type, X-Correlation-ID"
+CORSExposeHeaders = "Cache-Control, Content-Language, Content-Length, Content-Type, Expires, Last-Modified, Pragma, X-Correlation-ID"
+CORSMaxAge = 3600
+
+[Registry]
+Host = "localhost"
+Port = 59890
+Type = "keeper"
+
+# Database is require when Store and Forward is enabled or when using Redis for the Messagebus
+# Note when running in docker from compose file set the following environment variables:
+# - Database_Host: edgex-redis
+[Database]
+Type = "redisdb"
+Host = "localhost"
+Port = 6379
+Timeout = "30s"
+
+# SecretStore is required when Store and Forward is enabled and running with security
+# so Database credentials can be pulled from Vault. Also now require when running with secure Consul
+# Note when running in docker from compose file set the following environment variables:
+#   - SecretStore_Host: edgex-vault
+[SecretStore]
+Type = "vault"
+Host = "localhost"
+Port = 8200
+Path = "app-http-export/"
+Protocol = "http"
+RootCaCertPath = ""
+ServerName = ""
+SecretsFile = ""
+DisableScrubSecretsFile = false
+TokenFile = "/tmp/edgex/secrets/app-http-export/secrets-token.json"
+[SecretStore.Authentication]
+AuthType = "X-Vault-Token"
+
+[Clients]
+# Used for version check on start-up
+[Clients.core-metadata]
+Protocol = "http"
+Host = "localhost"
+Port = 59881
+
+[Trigger]
+Type = "http"
