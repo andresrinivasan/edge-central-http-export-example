@@ -21,7 +21,7 @@ services:
   #################################################################
   # Application Services
   #################################################################
-  app-service:
+  custom-app-service:
     image: iotechsys/${EDGEXPERT_IMAGE_REPO}-app-configurable:${EDGEXPERT_IMAGE_VERSION}
     container_name: app-${EDGEX_PROFILE:-}
     hostname: app-${EDGEX_PROFILE:-}
