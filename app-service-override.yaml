@@ -1,0 +1,20 @@
+#
+# Override parts of app-service
+#
+
+version: "3.7"
+
+volumes:
+  edgecentral-app-service-config:
+    external: true
+
+services:
+  #################################################################
+  # Application Services
+  #################################################################
+  app-service:
+    ports: 
+      - 59704:59704
+    volumes:
+      - edgecentral-app-service-config:/res/:ro
+
