@@ -8,8 +8,8 @@ MaxRetryCount = 10
 
 [Writable.Pipeline]
 UseTargetTypeOfByteArray = false
-ExecutionOrder = "PrintDataToLog, SetContextVariable_1, XpertHTTPExport_GET, PrintDataToLog, JavascriptTransform, XpertHTTPExport_PATCH"
-#ExecutionOrder = "PrintDataToLog, SetContextVariable_1, JavascriptTransform, PrintDataToLog, XpertHTTPExport_GET, PrintDataToLog, XpertHTTPExport_PATCH"
+#ExecutionOrder = "PrintDataToLog, SetContextVariable_1, XpertHTTPExport_GET, PrintDataToLog, JavascriptTransform, XpertHTTPExport_PATCH"
+ExecutionOrder = "PrintDataToLog, SetContextVariable_1, JavascriptTransform, PrintDataToLog, XpertHTTPExport_GET, PrintDataToLog, XpertHTTPExport_POST, PrintDataToLog"
 
 [Writable.Pipeline.Functions.PrintDataToLog]
 
@@ -52,10 +52,10 @@ TransformScript = """
 """
 
 [Writable.Pipeline.Functions.XpertHTTPExport]
-[Writable.Pipeline.Functions.XpertHTTPExport_PATCH.Parameters]
-Method = "PATCH"
+[Writable.Pipeline.Functions.XpertHTTPExport_POST.Parameters]
+Method = "POST"
 MimeType = "application/json"
-Url = "https://postman-echo.com/patch?joketype={JokeType}"
+Url = "https://postman-echo.com/post?joketype={JokeType}"
 PersistOnError = "false"
 ContinueOnSendError = "false"
 ReturnInputData = "false"

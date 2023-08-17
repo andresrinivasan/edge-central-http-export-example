@@ -2,7 +2,7 @@
 
 This repo contains ~~all~~ most* of the content from [the IOTech Edge Central HTTP Export Example](https://docs.iotechsys.com/edge-xpert23/app-services/http/export-events-to-http-endpoints.html) and is intended to help as a quickstart guide for a simple app service.
 
-*I replaced the boring echo service with data jokes.
+*I replaced the boring echo service with dad jokes.
 
 ## Prerequisites
 
