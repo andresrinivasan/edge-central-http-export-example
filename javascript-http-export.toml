@@ -8,7 +8,8 @@ MaxRetryCount = 10
 
 [Writable.Pipeline]
 UseTargetTypeOfByteArray = false
-ExecutionOrder = "PrintDataToLog, SetContextVariable_1, XpertHTTPExport_GET, JavascriptTransform, XpertHTTPExport_PATCH"
+ExecutionOrder = "PrintDataToLog, SetContextVariable_1, XpertHTTPExport_GET, PrintDataToLog, JavascriptTransform, XpertHTTPExport_PATCH"
+#ExecutionOrder = "PrintDataToLog, SetContextVariable_1, JavascriptTransform, PrintDataToLog, XpertHTTPExport_GET, PrintDataToLog, XpertHTTPExport_PATCH"
 
 [Writable.Pipeline.Functions.PrintDataToLog]
 
@@ -23,7 +24,7 @@ ExecutionOrder = "PrintDataToLog, SetContextVariable_1, XpertHTTPExport_GET, Jav
 [Writable.Pipeline.Functions.SetContextVariable_1]
 [Writable.Pipeline.Functions.SetContextVariable_1.Parameters]
 VariableName = "JokeType"
-ValueJSONPath = "jokeType"
+ValueJSONPath = "tags.jokeType"
 ContinueOnError = "false"
 
 [Writable.Pipeline.Functions.XpertHTTPExport_GET]
